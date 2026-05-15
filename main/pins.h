@@ -1,12 +1,11 @@
 #ifndef PINS_H
 #define PINS_H
 
-const int BTN_PIN_R = 4;
-const int BTN_PIN_G = 5;
-const int BTN_PIN_B = 6;
-const int LED_PIN_R = 7;
-const int LED_PIN_G = 8;
-const int LED_PIN_B = 9;
+#define I2C_SDA_GPIO 4
+#define I2C_SCL_GPIO 5
 
+#define LED_R_GPIO 7
+#define LED_G_GPIO 8
+#define LED_B_GPIO 9
 
-#endif // PINS_H
+#endif

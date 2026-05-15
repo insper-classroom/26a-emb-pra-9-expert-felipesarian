@@ -33,9 +33,9 @@ endif()
 
 set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
 
-# If you want debug output from USB (pass -DPICO_STDIO_USB=1) this ensures you don't lose any debug output while USB is set up
+# Não esperar o host conectar — printf sai imediatamente assim que o USB enumera.
 if (NOT DEFINED PICO_STDIO_USB_CONNECT_WAIT_TIMEOUT_MS)
-    set(PICO_STDIO_USB_CONNECT_WAIT_TIMEOUT_MS 3000)
+    set(PICO_STDIO_USB_CONNECT_WAIT_TIMEOUT_MS 0)
 endif()
 
 # Allow using the example keys, as this is the examples repository
@@ -70,6 +70,16 @@ add_compile_options(-Wall
 if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
     add_compile_options(-Wno-maybe-uninitialized)
 endif()
+
+# Edge Impulse SDK defines
+# -DFREERTOS_ENABLED ativa ei_malloc -> pvPortMalloc no porting raspberry, que
+# eh seguro pre-main porque o heap do FreeRTOS Heap4 e static. Sem isso, o
+# constructor de impulse_handle_xxx tenta alocar via malloc da libc em
+# pre-main e crasha. Identico ao exemplo edgeimpluse-runner.
+add_definitions(-DEIDSP_QUANTIZE_FILTERBANK=0
+                -DEI_PORTING_RASPBERRY=1
+                -DFREERTOS_ENABLED=0
+                -DARM_MATH_LOOPUNROLL)
 
 # Hardware-specific examples in subdirectories:
 add_subdirectory(main)
